@@ -31,6 +31,7 @@ https://github.com/microsoft/BitNet
 
 ## INSTALL
 - Run docker compose build base
+- Video of how to install and run: https://www.youtube.com/watch?v=Cr2fxew18d8
 
 NOTES:
 1) You'll get a lot of complier warnings during the install, but this is just due to how the original codebase was made. They are just warnings, but there shouldn't be any errors that stops the repo from compiling.
