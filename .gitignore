@@ -1,0 +1,4 @@
+# We ignore all of these file types
+*.env
+*.log
+*.pyc

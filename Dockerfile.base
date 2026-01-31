@@ -1,0 +1,58 @@
+# Dockerfile.base
+FROM python:3.12-alpine
+RUN apk add --no-cache \
+    clang=21.1.2-r2\
+    cmake=4.1.3-r0 \
+    git=2.52.0-r0 \
+    build-base
+
+# Set working directory
+WORKDIR /app
+
+# Install Python deps
+RUN pip install --no-cache-dir \
+    huggingface_hub[cli]==0.20.3
+
+# We clone BitNet at a fixed commit. This ensures that if the repo changes, this won't break the build.
+# BitNet is being continually updated, and we want a stable base to allow for reproducible builds.
+RUN git clone --recursive https://github.com/microsoft/BitNet.git /app/BitNet && \
+    cd /app/BitNet && \
+    git checkout ade47a535cac7727dedde25b37b97774699e32d3 && \
+    git submodule update --init --recursive && \
+    rm -rf .git
+
+# Download GGUF model (This is the default model used in BitNet)
+RUN python -m huggingface_hub.commands.huggingface_cli download \
+    microsoft/bitnet-b1.58-2B-4T-gguf \
+    --include "ggml-model-i2_s.gguf" \
+    --local-dir /app/BitNet/models
+
+# We need to replace BitNet/src/ggml-bitnet-mad.cpp with our patched version 
+# to fix the clang error about discarding 'const' qualifier.
+COPY Patch/ggml-bitnet-mad.cpp /app/BitNet/src/ggml-bitnet-mad.cpp
+
+WORKDIR /app/BitNet
+
+# Install BitNet requirements
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Codegen
+RUN python utils/codegen_tl2.py \
+    --model Llama3-8B-1.58-100B-tokens \
+    --BM 256,128,256,128 \
+    --BK 96,96,96,96 \
+    --bm 32,32,32,32
+
+# 🔑 FIX: force same kernel set as script 1 (no MAD kernels)
+ENV GGML_DISABLE_MAD=1
+
+# Configure + build with Alpine clang
+RUN cmake -B build \
+    -DBITNET_X86_TL2=ON \
+    -DCMAKE_C_COMPILER=clang \
+    -DCMAKE_CXX_COMPILER=clang++
+
+RUN cmake --build build --target llama-cli --config Release
+
+# Run
+CMD ["python3", "run_inference.py", "-m", "/app/ggml-model-i2_s.gguf", "-p", "You are a helpful assistant. Always follow the user's instructions.", "-cnv"]

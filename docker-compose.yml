@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  base:
+    image: bitnetdeps:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.base
+  bitnet:
+    depends_on:
+    - base
+    build: 
+      context: .
+      dockerfile: Dockerfile.main
+    env_file:
+      - ./Pipeline/.env   
+    entrypoint: "conda run --no-capture-output -n BN python Pipeline/main.py $ARGS"
+    volumes: 
+    - ./Pipeline:/app/Pipeline
+    - ./Patch:/app/Patch
