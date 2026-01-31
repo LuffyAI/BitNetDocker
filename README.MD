@@ -2,13 +2,13 @@
 
 ## Folder Structure
 
-- **API**  
+- **API (TO-DO)**  
   FastAPI service for locally hosting the LLM and exposing it to other applications.
 
 - **Patch**  
   Fixes applied to the BitNet repository to ensure successful compilation and execution.
 
-- **Pipeline**  
+- **Pipeline (TO-DO)**  
   Command-line interface that simplifies interacting with BitNet.
 
 ## Setup
