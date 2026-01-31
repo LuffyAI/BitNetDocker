@@ -13,10 +13,14 @@
 
 ## Setup
 
-- To download models other than the default, add your Hugging Face token to:
+- To download models other than the default, add your Hugging Face token to and use setup_env:
   ```
   pipeline/.env
+  EXAMPLE: python setup_env --hf-repo [SUPPORTED MODEL IN THE setup_env.py file] -q i2_s
+  EXAMPLE: python setup_env --hf-repo tiiuae/Falcon3-10B-Base-1.58bit -q i2_s
   ```
+
+
 
 - To run inference, use the command python run_inference.py -m <DIR_TO_MODEL's gguff> -p "<SYSTEM_PROMPT>" -cnv
 
