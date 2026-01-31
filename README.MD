@@ -33,7 +33,9 @@ https://github.com/microsoft/BitNet
 - Run docker compose build base
 
 NOTES:
-- You'll get a lot of complier warnings, but this is just due to how the original codebase was made. They are just warnings, but there shouldn't be any errors that stops the repo from compiling.
+1) You'll get a lot of complier warnings during the install, but this is just due to how the original codebase was made. They are just warnings, but there shouldn't be any errors that stops the repo from compiling.
+
+2) Don't forget to add your .env to the pipeline folder. If you don't, it'll tell you .env is not found.
 
 ## Running
 
