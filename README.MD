@@ -30,8 +30,7 @@ https://github.com/microsoft/BitNet
 - Example: python run_inference.py -m models/bitnet-b1.58-2B-4T/ggml-model-i2_s.gguf -p "You are a helpful assistant" -cnv
 
 ## INSTALL
-- Run docker compose build
-NOTE: There will be an error at the end because I haven't made the pipeline yet, but that doesn't affect anything.
+- Run docker compose build base
 
 ## Running
 
