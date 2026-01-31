@@ -1,0 +1,1 @@
+Directly use the container's shell: docker run --rm -it bitnetdeps:latest /bin/sh
