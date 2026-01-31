@@ -22,5 +22,5 @@
 
 - To directly access the container shell:
   ```
-  docker compose run base sh
+  docker compose run base bash
   ```

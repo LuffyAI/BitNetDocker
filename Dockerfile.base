@@ -1,27 +1,31 @@
 # Dockerfile.base
 # Python Version: 3.10
-# Base Image: Alpine 3.23
-# OS: Alpine Linux
-# Description: This Dockerfile sets up a base environment for building and running BitNet with Python 3.10 on Alpine Linux.
+# Linux: Debian Bookworm 
+# Description: This Dockerfile sets up a base environment for building and running BitNet with Python 3.10 on Debian Bookworm Slim.
 # It installs necessary dependencies, clones the BitNet repository at a specific commit, and prepares the environment for BitNet execution.
-FROM python:3.10-alpine3.23
+FROM python:3.10-bookworm
 
 # Install dependencies
-# https://pkgs.alpinelinux.org/packages
-# Clang is a complier for C/C++ code
-# Cmake automates dependency management and build process for C/C++ code. Think like Makefiles.
-# We all know git.
-# build-base is a meta-package that includes the GCC compiler, libc-dev and make.
-# pkgconf is a package configuration tool required by BitNet.
-RUN apk add --no-cache \
-    clang=21.1.2-r2 \
-    cmake=4.1.3-r0 \
-    git=2.52.0-r0 \
-    build-base=0.5-r3 \
-    pkgconf=2.5.1-r0 \
-    protobuf-dev=31.1-r1 \
-    py3-numpy=2.3.5-r0 \
-    vim
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    clang-16=1:16.* \
+    clang++-16=1:16.* \
+    cmake=3.25.* \
+    git=1:2.39.* \
+    build-essential=12.* \
+    pkg-config=1.8.* \
+    protobuf-compiler=3.21.* \
+    libprotobuf-dev=3.21.* \
+    python3-numpy=1:1.24.* \
+    vim \
+ && rm -rf /var/lib/apt/lists/*
+
+# The system expects 'clang' and 'clang++' to be present, so we create symlinks to the installed versions.
+# This ensures compatibility with build scripts that call 'clang' or 'clang++'.
+RUN ln -s /usr/bin/clang-16 /usr/bin/clang && \
+    ln -s /usr/bin/clang++-16 /usr/bin/clang++
+
+# Use bash shell
+SHELL ["/bin/bash", "-c"]
 
 # Set working directory
 WORKDIR /app
@@ -54,8 +58,7 @@ COPY Patch/setup_env.py /app/BitNet/setup_env.py
 WORKDIR /app/BitNet
 
 # Install BitNet requirements
-RUN sed -i '/^torch/d' requirements.txt && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Codegen
 RUN python utils/codegen_tl2.py \
@@ -66,11 +69,11 @@ RUN python utils/codegen_tl2.py \
 
 ENV GGML_DISABLE_MAD=1
 
-# Configure + build with Alpine clang
+# Configure + build with Debian Bookworm clang
 RUN cmake -B build \
     -DBITNET_X86_TL2=ON \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++
+    -DCMAKE_C_COMPILER=/usr/bin/clang-16 \
+    -DCMAKE_CXX_COMPILER=/usr/bin/clang++-16
 
 RUN cmake --build build --target llama-cli --config Release
 
