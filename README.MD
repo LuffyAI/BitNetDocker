@@ -18,6 +18,10 @@
   pipeline/.env
   ```
 
+- To run inference, use the command python run_inference.py -m <DIR_TO_MODEL's gguff> -p "<SYSTEM_PROMPT>" -cnv
+
+- Example: python run_inference.py -m models/bitnet-b1.58-2B-4T/ggml-model-i2_s.gguf -p "You are a helpful assistant" -cnv
+
 ## Running
 
 - To directly access the container shell:
