@@ -1,5 +1,10 @@
 # Dockerfile.base
-FROM python:3.10-alpine
+# Python Version: 3.10
+# Base Image: Alpine 3.23
+# OS: Alpine Linux
+# Description: This Dockerfile sets up a base environment for building and running BitNet with Python 3.10 on Alpine Linux.
+# It installs necessary dependencies, clones the BitNet repository at a specific commit, and prepares the environment for BitNet execution.
+FROM python:3.10-alpine3.23
 
 # Install dependencies
 # https://pkgs.alpinelinux.org/packages
@@ -12,7 +17,7 @@ RUN apk add --no-cache \
     clang=21.1.2-r2 \
     cmake=4.1.3-r0 \
     git=2.52.0-r0 \
-    build-base \
+    build-base=0.5-r3 \
     pkgconf=2.5.1-r0 \
     protobuf-dev=31.1-r1 \
     py3-numpy=2.3.5-r0 \
@@ -26,7 +31,7 @@ RUN pip install --no-cache-dir \
     huggingface_hub[cli]==0.20.3
 
 # We clone BitNet at a fixed commit. This ensures that if the repo changes, this won't break the build.
-# BitNet is being continually updated, and we want a stable base to allow for reproducible builds.
+# BitNet is being continually updated and actively researched, and we want a stable base to allow for reproducible builds.
 RUN git clone --recursive https://github.com/microsoft/BitNet.git /app/BitNet && \
     cd /app/BitNet && \
     git checkout ade47a535cac7727dedde25b37b97774699e32d3 && \
@@ -49,7 +54,8 @@ COPY Patch/setup_env.py /app/BitNet/setup_env.py
 WORKDIR /app/BitNet
 
 # Install BitNet requirements
-RUN pip install --no-cache-dir -r requirements.txt
+RUN sed -i '/^torch/d' requirements.txt && \
+    pip install --no-cache-dir -r requirements.txt
 
 # Codegen
 RUN python utils/codegen_tl2.py \

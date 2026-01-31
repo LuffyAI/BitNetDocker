@@ -56,6 +56,9 @@ SUPPORTED_HF_MODELS = {
     "tiiuae/Falcon-E-1B-Base": {
         "model_name": "Falcon-E-1B-Base",
     },
+    "tiiuae/Falcon3-10B-Base-1.58bit": {
+    "model_name": "Falcon3-10B-Base-1.58bit",
+},
 }
 
 SUPPORTED_QUANT_TYPES = {

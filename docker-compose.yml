@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.base
+    env_file:
+      - ./Pipeline/.env
   bitnet:
     depends_on:
     - base
