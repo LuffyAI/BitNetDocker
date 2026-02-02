@@ -1,3 +1,5 @@
+# Please consider giving my repo a star btw lol
+
 # Original REPO
 https://github.com/microsoft/BitNet
 
@@ -23,15 +25,18 @@ https://github.com/microsoft/BitNet
   EXAMPLE: python setup_env --hf-repo tiiuae/Falcon3-10B-Base-1.58bit -q i2_s
   ```
 
-
-
 - To run inference, use the command python run_inference.py -m <DIR_TO_MODEL's gguff> -p "<SYSTEM_PROMPT>" -cnv
 
 - Example: python run_inference.py -m models/bitnet-b1.58-2B-4T/ggml-model-i2_s.gguf -p "You are a helpful assistant" -cnv
 
 ## INSTALL
-- Run docker compose build
-NOTE: There will be an error at the end because I haven't made the pipeline yet, but that doesn't affect anything.
+- Run docker compose build base
+- Video of how to install and run: https://www.youtube.com/watch?v=Cr2fxew18d8
+
+NOTES:
+1) You'll get a lot of complier warnings during the install, but this is just due to how the original codebase was made. They are just warnings, but there shouldn't be any errors that stops the repo from compiling.
+
+2) Don't forget to add your .env to the pipeline folder. If you don't, it'll tell you .env is not found.
 
 ## Running
 

@@ -14,9 +14,11 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile.main
+    ports:
+      - "8501:8501"
     env_file:
       - ./Pipeline/.env   
-    entrypoint: "conda run --no-capture-output -n BN python Pipeline/main.py $ARGS"
+    entrypoint: "python main.py $ARGS"
     volumes: 
     - ./Pipeline:/app/Pipeline
     - ./Patch:/app/Patch

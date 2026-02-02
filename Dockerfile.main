@@ -1,13 +1,11 @@
 
 FROM bitnetdeps:latest
 
-WORKDIR /app
+# We set the working directory to /app/Pipeline
+WORKDIR /app/Pipeline
 
-# Copy requirements
+# Copy the requirements.txt file to the working directory
 COPY ./Pipeline/requirements.txt .
 
-# Install requirements in env (must use conda run)
-RUN conda run -n BN pip install -r requirements.txt
-
-# Copy the full project AFTER installing requirements
-COPY . .
+# Install required Python packages for the pipeline
+RUN pip install -r requirements.txt
