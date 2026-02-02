@@ -1,3 +1,5 @@
+# Please consider giving my repo a star btw lol
+
 # Original REPO
 https://github.com/microsoft/BitNet
 
